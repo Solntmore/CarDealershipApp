@@ -2,7 +2,7 @@ package com.lada.carDealershipApp.controller;
 
 import com.lada.carDealershipApp.dto.RequestCarDto;
 import com.lada.carDealershipApp.dto.ResponseCarDto;
-import com.lada.carDealershipApp.interfaces.AdminInterface;
+import com.lada.carDealershipApp.service.AdminCarService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -14,12 +14,12 @@ import javax.validation.Valid;
 import java.util.List;
 
 @Slf4j
-@RequiredArgsConstructor
 @RestController
+@RequiredArgsConstructor
 @RequestMapping(path = "/admin")
 public class AdminController {
 
-    private AdminInterface carService;
+    private final AdminCarService carService;
 
     @PostMapping("/cars")
     public ResponseEntity<ResponseCarDto> addCarToStorage(@RequestBody @Valid RequestCarDto requestCarDto) {
@@ -29,8 +29,9 @@ public class AdminController {
     }
 
     @DeleteMapping("/cars/{carId}")
-    public ResponseEntity<Void> deleteCarFromStorage(@PathVariable String carId) {
+    public ResponseEntity<Void> deleteCarFromStorage(@PathVariable Long carId) {
         log.debug("A Delete/admin/cars/{} request was received. Delete car from storage", carId);
+        carService.deleteCarFromStorage(carId);
 
         return ResponseEntity.status(204).build();
     }
@@ -43,7 +44,8 @@ public class AdminController {
     }
 
     @GetMapping("/cars")
-    public ResponseEntity<List<ResponseCarDto>> getAllCars(@RequestParam int from, @RequestParam int size) {
+    public ResponseEntity<List<ResponseCarDto>> getAllCars(@RequestParam(required = false, defaultValue = "0") int from,
+                                                           @RequestParam(required = false, defaultValue = "10") int size) {
         log.debug("A Get/admin/cars request was received. Get all cars from storage");
 
         return ResponseEntity.status(HttpStatus.OK).body(carService.getAllCars(PageRequest.of(from, size)));
