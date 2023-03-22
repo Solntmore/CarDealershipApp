@@ -37,6 +37,14 @@ public class AdminCarService implements AdminInterface, GeneralInterface {
     }
 
     @Override
+    public ResponseCarDto updateCarInStorage(RequestCarDto requestCarDto, Long carId) {
+        Car car = getCarIfExist(carId);
+        car = carRepository.save(carMapper.partialUpdate(requestCarDto, car));
+
+        return carMapper.toDto(car);
+    }
+
+    @Override
     public ResponseCarDto getCarById(Long id) {
         return carMapper.toDto(getCarIfExist(id));
     }

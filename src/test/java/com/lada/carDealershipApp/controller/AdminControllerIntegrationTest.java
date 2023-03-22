@@ -1,5 +1,4 @@
-package com.lada.carDealershipApp;
-
+package com.lada.carDealershipApp.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lada.carDealershipApp.dto.RequestCarDto;
@@ -10,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
@@ -24,10 +24,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 @SpringBootTest
 @AutoConfigureMockMvc
+@WithUserDetails("admin")
 @Transactional
 @Sql(statements = {RESET_IDS, CREATE_CARS})
-class AdminCarControllerMockTest {
+class AdminControllerIntegrationTest {
     private static ObjectMapper objectMapper;
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -50,6 +52,8 @@ class AdminCarControllerMockTest {
                         post("/admin/cars")
                                 .content(objectMapper.writeValueAsString(requestCarDto))
                                 .contentType(MediaType.APPLICATION_JSON)
+                                .header("username", "admin")
+                                .header("password", "admin")
                 )
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").isNumber())
@@ -73,6 +77,8 @@ class AdminCarControllerMockTest {
                         post("/admin/cars")
                                 .content(objectMapper.writeValueAsString(requestCarDto))
                                 .contentType(MediaType.APPLICATION_JSON)
+                                .header("username", "admin")
+                                .header("password", "admin")
                 )
                 .andExpect(status().isBadRequest());
     }
@@ -91,6 +97,8 @@ class AdminCarControllerMockTest {
                         post("/admin/cars")
                                 .content(objectMapper.writeValueAsString(requestCarDto))
                                 .contentType(MediaType.APPLICATION_JSON)
+                                .header("username", "admin")
+                                .header("password", "admin")
                 )
                 .andExpect(status().isBadRequest());
     }
@@ -109,6 +117,8 @@ class AdminCarControllerMockTest {
                         post("/admin/cars")
                                 .content(objectMapper.writeValueAsString(requestCarDto))
                                 .contentType(MediaType.APPLICATION_JSON)
+                                .header("username", "admin")
+                                .header("password", "admin")
                 )
                 .andExpect(status().isBadRequest());
     }
@@ -127,6 +137,8 @@ class AdminCarControllerMockTest {
                         post("/admin/cars")
                                 .content(objectMapper.writeValueAsString(requestCarDto))
                                 .contentType(MediaType.APPLICATION_JSON)
+                                .header("username", "admin")
+                                .header("password", "admin")
                 )
                 .andExpect(status().isBadRequest());
     }
@@ -138,12 +150,16 @@ class AdminCarControllerMockTest {
         mockMvc.perform(
                         delete("/admin/cars/1")
                                 .contentType(MediaType.APPLICATION_JSON)
+                                .header("username", "admin")
+                                .header("password", "admin")
                 )
                 .andExpect(status().isNoContent());
 
         mockMvc.perform(
                         get("/admin/cars/1")
                                 .contentType(MediaType.APPLICATION_JSON)
+                                .header("username", "admin")
+                                .header("password", "admin")
                 )
                 .andExpect(status().isNotFound());
     }
@@ -155,6 +171,8 @@ class AdminCarControllerMockTest {
         mockMvc.perform(
                         delete("/admin/cars/88")
                                 .contentType(MediaType.APPLICATION_JSON)
+                                .header("username", "admin")
+                                .header("password", "admin")
                 )
                 .andExpect(status().isNotFound());
     }
@@ -166,6 +184,8 @@ class AdminCarControllerMockTest {
         mockMvc.perform(
                         get("/admin/cars/1")
                                 .contentType(MediaType.APPLICATION_JSON)
+                                .header("username", "admin")
+                                .header("password", "admin")
                 )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").isNumber())
@@ -182,6 +202,8 @@ class AdminCarControllerMockTest {
         mockMvc.perform(
                         get("/admin/cars/88")
                                 .contentType(MediaType.APPLICATION_JSON)
+                                .header("username", "admin")
+                                .header("password", "admin")
                 )
                 .andExpect(status().isNotFound());
     }
@@ -193,6 +215,8 @@ class AdminCarControllerMockTest {
         mockMvc.perform(
                         get("/admin/cars")
                                 .contentType(MediaType.APPLICATION_JSON)
+                                .header("username", "admin")
+                                .header("password", "admin")
                 )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").isNumber())
@@ -215,6 +239,8 @@ class AdminCarControllerMockTest {
         mockMvc.perform(
                         get("/admin/cars?from=0&size=3")
                                 .contentType(MediaType.APPLICATION_JSON)
+                                .header("username", "admin")
+                                .header("password", "admin")
                 )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").isNumber())

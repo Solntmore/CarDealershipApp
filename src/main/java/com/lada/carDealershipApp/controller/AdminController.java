@@ -28,6 +28,14 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.CREATED).body(carService.addCarToStorage(requestCarDto));
     }
 
+    @PutMapping("/cars/{carId}")
+    public ResponseEntity<ResponseCarDto> updateCarInStorage(@RequestBody @Valid RequestCarDto requestCarDto,
+                                                             @PathVariable Long carId) {
+        log.debug("A Put/admin/cars request was received. Update car in storage");
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(carService.updateCarInStorage(requestCarDto, carId));
+    }
+
     @DeleteMapping("/cars/{carId}")
     public ResponseEntity<Void> deleteCarFromStorage(@PathVariable Long carId) {
         log.debug("A Delete/admin/cars/{} request was received. Delete car from storage", carId);
@@ -51,4 +59,17 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.OK).body(carService.getAllCars(PageRequest.of(from, size)));
     }
 
+    @GetMapping("/init")
+    public ResponseEntity<List<ResponseCarDto>> initialize(@RequestParam(required = false, defaultValue = "0") int from,
+                                                           @RequestParam(required = false, defaultValue = "10") int size) {
+        log.debug("A Get/admin/cars request was received. Get all cars from storage");
+        carService.addCarToStorage(RequestCarDto.builder().brand("Лада").model("Веста").equipment("Люкс").price(1163025).build());
+        carService.addCarToStorage(RequestCarDto.builder().brand("Лада").model("Гранта").equipment("Актив").price(753850).build());
+        carService.addCarToStorage(RequestCarDto.builder().brand("Лада").model("Веста").equipment("Люкс").price(1150000).build());
+        carService.addCarToStorage(RequestCarDto.builder().brand("Лада").model("Приора").equipment("Люкс").price(556300).build());
+        carService.addCarToStorage(RequestCarDto.builder().brand("Лада").model("Веста").equipment("Актив").price(1202000).build());
+        carService.addCarToStorage(RequestCarDto.builder().brand("Лада").model("Икс-рей").equipment("Люкс").price(1250000).build());
+
+        return ResponseEntity.status(HttpStatus.OK).body(carService.getAllCars(PageRequest.of(from, size)));
+    }
 }

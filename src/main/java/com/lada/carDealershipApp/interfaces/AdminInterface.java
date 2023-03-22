@@ -10,4 +10,5 @@ public interface AdminInterface {
 
     public void deleteCarFromStorage(Long id); //Удалить авто со склада
 
+    ResponseCarDto updateCarInStorage(RequestCarDto requestCarDto, Long carId);
 }
